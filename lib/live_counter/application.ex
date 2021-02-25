@@ -1,0 +1,35 @@
+defmodule LiveCounter.Application do
+  # See https://hexdocs.pm/elixir/Application.html
+  # for more information on OTP Applications
+  @moduledoc false
+
+  use Application
+
+  def start(_type, _args) do
+    children = [
+      # Start the App State
+      LiveCounter.Count,
+      # Start the Telemetry supervisor
+      LiveCounterWeb.Telemetry,
+      # Start the PubSub system
+      {Phoenix.PubSub, name: LiveCounter.PubSub},
+      LiveCounter.Presence,
+      # Start the Endpoint (http/https)
+      LiveCounterWeb.Endpoint
+      # Start a worker by calling: LiveCounter.Worker.start_link(arg)
+      # {LiveCounter.Worker, arg}
+    ]
+
+    # See https://hexdocs.pm/elixir/Supervisor.html
+    # for other strategies and supported options
+    opts = [strategy: :one_for_one, name: LiveCounter.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
+
+  # Tell Phoenix to update the endpoint configuration
+  # whenever the application is updated.
+  def config_change(changed, _new, removed) do
+    LiveCounterWeb.Endpoint.config_change(changed, removed)
+    :ok
+  end
+end

@@ -1,3 +1,5 @@
+Cloned from https://github.com/dwyl/phoenix-liveview-counter-tutorial
+
 # LiveCounter
 
 To start your Phoenix server:

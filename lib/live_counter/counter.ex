@@ -1,6 +1,6 @@
 defmodule LiveCounter.Count do
   use GenServer
-  use Zig, local_zig: true
+  use Zig, local_zig: true, link_libc: true
 
   alias Phoenix.PubSub
 

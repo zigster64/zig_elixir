@@ -1,6 +1,14 @@
 defmodule LiveCounter.Count do
   use GenServer
-  use Zig, local_zig: true, link_libc: true
+  use Zig, local_zig: true, link_libc: true, include: ["/usr/include", "/usr/lib/include"]
+
+  ~Z""" 
+  /// nif: apply_change/2
+  fn apply_change(count: i64, change: i64) i64 {
+    std.debug.print("Applying change in zig {} + {} = {}\n", .{count, change, count+change});
+    return count + change;
+  }
+  """
 
   alias Phoenix.PubSub
 
@@ -48,16 +56,8 @@ defmodule LiveCounter.Count do
     make_change(count, -1)
   end
 
-  ~Z""" 
-  /// nif: apply_count/2
-  const std = @import("std");
-  fn apply_count(count: i64, change: i64) i64 {
-    std.debug.print("apply_count in zig {} + {} = {}\n", .{count, change, count+change});
-    return count + change;
-  }
-  """
   defp make_change(count, change) do
-    new_count = LiveCounter.apply_count(count, change)
+    new_count = apply_change(count, change)
     PubSub.broadcast(LiveCounter.PubSub, topic(), {:count, new_count})
     {:reply, new_count, new_count}
   end

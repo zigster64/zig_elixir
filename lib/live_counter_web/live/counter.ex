@@ -45,11 +45,19 @@ defmodule LiveCounterWeb.Counter do
   def render(assigns) do
     ~L"""
     <div> 
+      <h1>Current users: <%= @present %></h1>
       <h1>The count is: <%= @val %></h1>
       <button phx-click="dec">-</button>
       <button phx-click="inc">+</button>
-      <h1>Current users: <%= @present %></h1>
     </div>
+    <ul>
+      <li>This frontend has no Javascript</li>
+      <li>The button clicks fire requests over a socket</li>
+      <li>The backend is Erlang/Elixir controlling the sockets</li>
+      <li>The Button Click is routed to a Zig function</li>
+      <li>The output of the Zig function is send back over the socket to tell the frontend to update its display</li>
+      <li>No Javascript !!   like seriously - NONE</li>
+    </ul>
     """
   end
 end
